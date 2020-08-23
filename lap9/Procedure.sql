@@ -1,4 +1,4 @@
-CREATE TABLE ToyzUnlimited 
+﻿CREATE TABLE ToyzUnlimited 
 GO
 USE ToyzUnlimited
 GO
@@ -14,8 +14,8 @@ CREATE TABLE Toys (
   QtyOnHand int
 )
 GO
---1. T?o b?ng Toys v?i c?u tr�c gi?ng nh? tr�n. Th�m d? li?u (15 b?n ghi) v�o b?ng v?i gi� tr? c?a
---tr??ng QtyOnHand �t nh?t l� 20 cho m?i s?n ph?m ?? ch?i. 
+--1. Tạo bảng Toys với cấu trúc giống như trên. Thêm dữ liệu (15 bản ghi) vào bảng với giá trị của
+--trường QtyOnHand ít nhất là 20 cho mỗi sản phẩm đồ chơi. 
 INSERT INTO Toys VALUES ('T1', 'JC Toys','Toys', 'Tennessee Williams', '3-5 Year Old', 35, 500, 125)
 INSERT INTO Toys VALUES ('T2', 'Doll Riter' ,' Doll', 'Henderen', '3-7 Year Old', 25,400, 100),
                          ('T3', 'Teddy bear', 'Teddy', 'Hammer', '3-11 Year Old', 50,750, 1000),
@@ -31,18 +31,18 @@ INSERT INTO Toys VALUES ('T2', 'Doll Riter' ,' Doll', 'Henderen', '3-7 Year Old'
 						 ('T13', 'Car Toys', 'Toys', 'LamaYa', '6-12 Year old', 90,250, 1200),
 						 ('T14', 'Rubik cude', 'Rubik', 'Ruzana', '5-12 Year Old', 45,125, 1200),
 						 ('T15', 'Block Tomokid', ' Block', 'Tomaya', '7-12 Year old', 34,124, 123)
---2. Vi?t c�u l?nh t?o Th? t?c l?u tr? c� t�n l� HeavyToys cho ph�p li?t k� t?t c? c�c lo?i ?? ch?i c�
---tr?ng l??ng l?n h?n 500g. 
+--2. Viết câu lệnh tạo Thủ tục lưu trữ có tên là HeavyToys cho phép liệt kê tất cả các loại đồ chơi có
+--trọng lượng lớn hơn 500g. 
 CREATE  PROCEDURE  HeavyToys AS 
 SELECT Name FROM Toys 
 WHERE Netweight > 500
---3. Vi?t c�u l?nh t?o Th? t?c l?u tr? c� t�n l� PriceIncreasecho ph�p t?ng gi� c?a t?t c? c�c lo?i ??
---ch?i l�n th�m 10 ??n v? gi�.
+--3. Viết câu lệnh tạo Thủ tục lưu trữ có tên là PriceIncreasecho phép tăng giá của tất cả các loại đồ
+--chơi lên thêm 10 đơn vị giá.
 CREATE PROCEDURE  PriceIncrease as
 SELECT ProductCode,Name, Category, ManuFacturer, UnitPrice+10 As price_increases, Netweight, QtyOnHand
 FROM Toys
---4. Vi?t c�u l?nh t?o Th? t?c l?u tr? c� t�n l� QtyOnHand l�m gi?m s? l??ng ?? ch?i c�n trong c?a
---h�ng m?i th? 5 ??n v?.  
+--4. Viết câu lệnh tạo Thủ tục lưu trữ có tên là QtyOnHand làm giảm số lượng đồ chơi còn trong của
+--hàng mỗi thứ 5 đơn vị.  
 
 CREATE PROCEDURE QtyOnHand AS
 SELECT ProductCode,Name, Category, ManuFacturer, UnitPrice, QtyOnHand-5 as QtyONHand_decrease
@@ -53,9 +53,9 @@ Exec  HeavyToys
 EXECUTE PriceIncrease
 EXEC QtyOnHand
 
---Ph?n IV: B�i t?p v? nh� 
---1. Ta ?� c� 3 th? t?c l?u tr? t�n l� HeavyToys,PriceIncrease, QtyOnHand. Vi?t c�c c�u l?nh xem
---??nh ngh?a c?ac�c th? t?c tr�n d�ng 3 c�ch sau: 
+--Phần IV: Bài tập về nhà 
+--1. Ta đã có 3 thủ tục lưu trữ tên là HeavyToys,PriceIncrease, QtyOnHand. Viết các câu lệnh xem
+--định nghĩa củacác thủ tục trên dùng 3 cách sau: 
 Exec sp_helptext HeavyToys
 sp_helptext PriceIncrease
 sp_helptext QtyOnHand
@@ -68,13 +68,13 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('HeavyToys'));
 SELECT OBJECT_DEFINITION(OBJECT_ID('PriceIncrease'));
 SELECT OBJECT_DEFINITION(OBJECT_ID('QtyOnHand'));
 
---2. Vi?t c�u l?nh hi?n th? c�c ??i t??ng ph? thu?c c?a m?i th? t?c l?u tr? tr�n 
+--2. Viết câu lệnh hiển thị các đối tượng phụ thuộc của mỗi thủ tục lưu trữ trên 
 EXECUTE sp_depends HeavyToys
 EXECUTE sp_depends PriceIncrease 
 EXECUTE sp_depends QtyOnHand
 
---3. Ch?nh s?a th? t?c PriceIncreasev� QtyOnHandth�m c�u l?nh cho ph�p hi?n th? gi� tr? m?i ?�
---???c c?p nh?t c?a c�c tr??ng (UnitPrice,QtyOnHand). 
+--3. Chỉnh sửa thủ tục PriceIncreasevà QtyOnHandthêm câu lệnh cho phép hiển thị giá trị mới đã
+--được cập nhật của các trường (UnitPrice,QtyOnHand). 
 ALTER PROCEDURE PriceIncrease as
 UPDATE Toys SET UnitPrice = UnitPrice+15 
 GO
@@ -82,16 +82,16 @@ ALTER PROCEDURE QtyOnHand AS
 UPDATE Toys SET QtyOnHand = QtyOnHand-10
 GO
 
---4. Vi?t c�u l?nh t?o th? t?c l?u tr? c� t�n l� SpecificPriceIncrease th?c hi?n c?ng th�m t?ng s? s?n
---ph?m (gi� tr? tr??ng QtyOnHand)v�o gi� c?a s?n ph?m ?? ch?i t??ng ?ng. 
+--4. Viết câu lệnh tạo thủ tục lưu trữ có tên là SpecificPriceIncrease thực hiện cộng thêm tổng số sản
+--phẩm (giá trị trường QtyOnHand)vào giá của sản phẩm đồ chơi tương ứng. 
 
 CREATE PROCEDURE SpecificPriceIncrease AS 
 UPDATE toys SET UnitPrice = UnitPrice+ QtyOnHand
 GO
 exec SpecificPriceIncrease
 select* from Toys
---5. Ch?nh s?a th? t?c l?u tr? SpecificPriceIncrease cho th�m t�nh n?ng tr? l?i t?ng s? c�c b?n ghi
---???c c?p nh?t. 
+--5. Chỉnh sửa thủ tục lưu trữ SpecificPriceIncrease cho thêm tính năng trả lại tổng số các bản ghi
+--được cập nhật. 
 ALTER PROCEDURE SpecificPriceIncrease AS 
 BEGIN 
 UPDATE Toys SET UnitPrice = UnitPrice + QtyOnHand
@@ -101,7 +101,7 @@ WHERE QtyOnHand > 0
 SELECT @@ROWCOUNT
 END
 
---6. Ch?nh s?a th? t?c l?u tr? SpecificPriceIncrease cho ph�p g?i th? t?c HeavyToysb�n trong n� 
+--6. Chỉnh sửa thủ tục lưu trữ SpecificPriceIncrease cho phép gọi thủ tục HeavyToysbên trong nó 
 ALTER PROCEDURE SpecificPriceIncrease AS
 BEGIN
 UPDATE Toys SET UnitPrice = UnitPrice+QtyOnHand
@@ -112,8 +112,8 @@ SELECT @@ROWCOUNT
 EXECUTE HeavyToys
 END
 EXEC SpecificPriceIncrease
---7. Th?c hi?n ?i?u khi?n x? l� l?i cho t?t c? c�c th? t?c l?u tr? ???c t?o ra. 
---8. X�a b? t?t c? c�c th? t?c l?u tr? ?� ???c t?o ra
+--7. Thực hiện điều khiển xử lý lỗi cho tất cả các thủ tục lưu trữ được tạo ra. 
+--8. Xóa bỏ tất cả các thủ tục lưu trữ đã được tạo ra
 DROP PROCEDURE HeavyToys
 DROP PROCEDURE QtyOnHand
 DROP PROCEDURE PriceIncrease
